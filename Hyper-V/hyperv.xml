@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>5.0</version>
+    <date>2020-10-19T18:56:26Z</date>
+    <groups>
+        <group>
+            <name>Templates/Virtualization</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Hyper-V</template>
+            <name>Hyper-V</name>
+            <groups>
+                <group>
+                    <name>Templates/Virtualization</name>
+                </group>
+            </groups>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>Hyper-V discovery</name>
+                    <key>HyperV[discovery]</key>
+                    <delay>1800</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Занято общего процессора виртуальной машиной {#VMNAME}</name>
+                            <key>HyperV[{#VMID},cpuusage]</key>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Выделено памяти виртуальной машине {#VMNAME}</name>
+                            <key>HyperV[{#VMID},memassigned]</key>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Нужно памяти виртуальной машине {#VMNAME}</name>
+                            <key>HyperV[{#VMID},memdemand]</key>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Статус памяти виртуальной машины {#VMNAME}</name>
+                            <key>HyperV[{#VMID},memstatus]</key>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Статус виртуальной машины {#VMNAME}</name>
+                            <key>HyperV[{#VMID},state]</key>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{change()}=1</expression>
+                                    <name>Виртуалка {#VMNAME} сменила статус</name>
+                                    <priority>INFO</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                    <trigger_prototypes>
+                        <trigger_prototype>
+                            <expression>{Hyper-V:HyperV[{#VMID},memassigned].last()}&lt;{Hyper-V:HyperV[{#VMID},memdemand].last()}</expression>
+                            <name>Виртуалке {#VMNAME} не хватает оперативки</name>
+                            <priority>WARNING</priority>
+                        </trigger_prototype>
+                    </trigger_prototypes>
+                    <graph_prototypes>
+                        <graph_prototype>
+                            <name>Виртаулка {#VMNAME} занимает процесстор</name>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <color>2196F3</color>
+                                    <item>
+                                        <host>Hyper-V</host>
+                                        <key>HyperV[{#VMID},cpuusage]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                        <graph_prototype>
+                            <name>Оперативная память виртуальной машины {#VMNAME}</name>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <color>1A7C11</color>
+                                    <item>
+                                        <host>Hyper-V</host>
+                                        <key>HyperV[{#VMID},memassigned]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>2</sortorder>
+                                    <color>F63100</color>
+                                    <item>
+                                        <host>Hyper-V</host>
+                                        <key>HyperV[{#VMID},memdemand]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                    </graph_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+        </template>
+    </templates>
+</zabbix_export>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>5.0</version>
+    <date>2020-10-29T09:29:41Z</date>
+    <groups>
+        <group>
+            <name>Templates/Applications</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Veeam</template>
+            <name>Veeam</name>
+            <groups>
+                <group>
+                    <name>Templates/Applications</name>
+                </group>
+            </groups>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>Veeam discovery</name>
+                    <key>Veeam[discovery]</key>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Дата последнего удачного выполнения задачи {#JOBNAME}</name>
+                            <key>Veeam[{#JOBID},last]</key>
+                            <delay>1h</delay>
+                            <trends>0</trends>
+                            <value_type>LOG</value_type>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Статус последнего выполнения задачи {#JOBNAME}</name>
+                            <key>Veeam[{#JOBID},status]</key>
+                            <delay>1h</delay>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=&quot;Failed&quot;</expression>
+                                    <name>Задача {#JOBNAME} не выполнилась</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+        </template>
+    </templates>
+</zabbix_export>
