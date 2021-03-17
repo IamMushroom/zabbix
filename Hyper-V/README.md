@@ -13,6 +13,6 @@
 1. Скопировать скрипт hyperv.ps1 в папку C:\Zabbix\script
 2. Добавить в zabbix_agentd.conf строку:
 ```
-UserParameter=HyperV[*],powershell -File C:\Zabbix\script\hyperv.psq "$1" "$2"
+UserParameter=HyperV[*],powershell -File C:\Zabbix\script\hyperv.ps1 "$1" "$2"
 ```
 3. Импортировать шаблон в Zabbix

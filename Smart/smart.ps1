@@ -4,7 +4,7 @@
 # Ключ: discovery
 if ($1 -eq "discovery") {
 try {
-$items = c:\"Program Files"\smartmontools\bin\smartctl --scan-open | Where-Object {$_ -match "/dev/sd"}
+$items = c:\"Program Files"\smartmontools\bin\smartctl --scan-open | Where-Object {$_ -match "/dev/"}
 
 write-host -NoNewline "{"
 write-host -NoNewline "`"data`":["
