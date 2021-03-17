@@ -1,0 +1,73 @@
+zabbix_export:
+  version: '5.2'
+  date: '2021-03-17T11:09:49Z'
+  groups:
+    -
+      name: Templates/Virtualization
+  templates:
+    -
+      template: Hyper-V
+      name: Hyper-V
+      groups:
+        -
+          name: Templates/Virtualization
+      discovery_rules:
+        -
+          name: 'Hyper-V discovery'
+          key: 'HyperV[discovery]'
+          delay: '1800'
+          item_prototypes:
+            -
+              name: 'Занято общего процессора виртуальной машиной {#VMNAME}'
+              key: 'HyperV[{#VMID},cpuusage]'
+            -
+              name: 'Выделено памяти виртуальной машине {#VMNAME}'
+              key: 'HyperV[{#VMID},memassigned]'
+            -
+              name: 'Нужно памяти виртуальной машине {#VMNAME}'
+              key: 'HyperV[{#VMID},memdemand]'
+            -
+              name: 'Статус памяти виртуальной машины {#VMNAME}'
+              key: 'HyperV[{#VMID},memstatus]'
+              trends: '0'
+              value_type: TEXT
+            -
+              name: 'Статус виртуальной машины {#VMNAME}'
+              key: 'HyperV[{#VMID},state]'
+              trends: '0'
+              value_type: TEXT
+              trigger_prototypes:
+                -
+                  expression: '{change()}=1'
+                  name: 'Виртуалка {#VMNAME} сменила статус'
+                  priority: INFO
+          trigger_prototypes:
+            -
+              expression: '{Hyper-V:HyperV[{#VMID},memassigned].last()}<{Hyper-V:HyperV[{#VMID},memdemand].last()}'
+              name: 'Виртуалке {#VMNAME} не хватает оперативки'
+              priority: WARNING
+          graph_prototypes:
+            -
+              name: 'Виртаулка {#VMNAME} занимает процесстор'
+              graph_items:
+                -
+                  sortorder: '1'
+                  color: 2196F3
+                  item:
+                    host: Hyper-V
+                    key: 'HyperV[{#VMID},cpuusage]'
+            -
+              name: 'Оперативная память виртуальной машины {#VMNAME}'
+              graph_items:
+                -
+                  sortorder: '1'
+                  color: 1A7C11
+                  item:
+                    host: Hyper-V
+                    key: 'HyperV[{#VMID},memassigned]'
+                -
+                  sortorder: '2'
+                  color: F63100
+                  item:
+                    host: Hyper-V
+                    key: 'HyperV[{#VMID},memdemand]'
