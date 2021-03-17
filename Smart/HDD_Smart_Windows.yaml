@@ -1,0 +1,218 @@
+zabbix_export:
+  version: '5.2'
+  date: '2021-03-17T08:38:11Z'
+  groups:
+    -
+      name: Templates
+    -
+      name: 'Компьютеры Windows'
+  templates:
+    -
+      template: 'HDD Smart Windows'
+      name: 'HDD Smart Windows'
+      groups:
+        -
+          name: Templates
+        -
+          name: 'Компьютеры Windows'
+      applications:
+        -
+          name: 'Жесткие диски'
+      discovery_rules:
+        -
+          name: 'Обнаружение дисков'
+          key: 'ZSmart[discovery]'
+          delay: 30m
+          lifetime: 3d
+          item_prototypes:
+            -
+              name: 'Диск {#DISKID} - SMART - Spin-Up Time [3]'
+              key: 'ZSmart[{#DISKID},3]'
+              delay: '3600'
+              applications:
+                -
+                  name: 'Жесткие диски'
+            -
+              name: 'Диск {#DISKID} - SMART - Reallocated Sectors Count [5]'
+              key: 'ZSmart[{#DISKID},5]'
+              delay: '3600'
+              applications:
+                -
+                  name: 'Жесткие диски'
+              trigger_prototypes:
+                -
+                  expression: '{last(#1)}>0'
+                  name: 'SMART Reallocated Sectors Count вырос'
+                  priority: AVERAGE
+                  description: 'Изменение параметра Reallocated Sectors Count в SMART диска'
+                  manual_close: 'YES'
+            -
+              name: 'Диск {#DISKID} - SMART - Seek Error Rate [7]'
+              key: 'ZSmart[{#DISKID},7]'
+              delay: '3600'
+              applications:
+                -
+                  name: 'Жесткие диски'
+            -
+              name: 'Диск {#DISKID} - SMART - Power-on Time Count [9] (часов)'
+              key: 'ZSmart[{#DISKID},9]'
+              delay: '3600'
+              units: s
+              applications:
+                -
+                  name: 'Жесткие диски'
+              preprocessing:
+                -
+                  type: MULTIPLIER
+                  parameters:
+                    - '3600'
+            -
+              name: 'Диск {#DISKID} - SMART - Spin-Up Retry Count [10]'
+              key: 'ZSmart[{#DISKID},10]'
+              delay: '3600'
+              applications:
+                -
+                  name: 'Жесткие диски'
+              trigger_prototypes:
+                -
+                  expression: '{last(#1)}>0'
+                  name: 'SMART Spin Retry Count вырос'
+                  priority: AVERAGE
+                  description: 'Изменение параметра Spin Retry Count в SMART диска'
+                  manual_close: 'YES'
+            -
+              name: 'Диск {#DISKID} - SMART - G-sense error rate [191]'
+              key: 'ZSmart[{#DISKID},191]'
+              delay: '3600'
+              applications:
+                -
+                  name: 'Жесткие диски'
+            -
+              name: 'Диск {#DISKID} - SMART - Температура [194]'
+              key: 'ZSmart[{#DISKID},194]'
+              delay: '300'
+              units: °C
+              applications:
+                -
+                  name: 'Жесткие диски'
+              trigger_prototypes:
+                -
+                  expression: '{last()}>50'
+                  name: 'Высокая температура диска на {HOST.NAME}'
+                  priority: AVERAGE
+                -
+                  expression: '{last()}>55'
+                  name: 'Опасная температура диска на {HOST.NAME}'
+                  priority: HIGH
+            -
+              name: 'Диск {#DISKID} - SMART - Reallocation Event Count [196]'
+              key: 'ZSmart[{#DISKID},196]'
+              delay: '3600'
+              applications:
+                -
+                  name: 'Жесткие диски'
+            -
+              name: 'Диск {#DISKID} - SMART - Current Pending Sector Count [197]'
+              key: 'ZSmart[{#DISKID},197]'
+              delay: '3600'
+              applications:
+                -
+                  name: 'Жесткие диски'
+              trigger_prototypes:
+                -
+                  expression: '{last(#1)}>0'
+                  name: 'SMART Current Pending Sector вырос'
+                  priority: AVERAGE
+                  description: 'Изменение параметра Current Pending Sector в SMART диска'
+                  manual_close: 'YES'
+            -
+              name: 'Диск {#DISKID} - SMART - Uncorrectable Sector Count [198]'
+              key: 'ZSmart[{#DISKID},198]'
+              delay: '3600'
+              applications:
+                -
+                  name: 'Жесткие диски'
+              trigger_prototypes:
+                -
+                  expression: '{last(#1)}>0'
+                  name: 'SMART Uncorrectable Sector Count вырос'
+                  priority: AVERAGE
+                  description: 'Изменение параметра Uncorrectable Sector Count в SMART диска'
+                  manual_close: 'YES'
+            -
+              name: 'Диск {#DISKID} - SMART - UltraDMA CRC Error Count [199]'
+              key: 'ZSmart[{#DISKID},199]'
+              delay: '3600'
+              applications:
+                -
+                  name: 'Жесткие диски'
+            -
+              name: 'Диск {#DISKID} - Номинальная емкость'
+              key: 'ZSmart[{#DISKID},capacity]'
+              delay: '3600'
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              applications:
+                -
+                  name: 'Жесткие диски'
+            -
+              name: 'Диск {#DISKID} - Семество'
+              key: 'ZSmart[{#DISKID},family]'
+              delay: '3600'
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              applications:
+                -
+                  name: 'Жесткие диски'
+            -
+              name: 'Диск {#DISKID} - Версия FW'
+              key: 'ZSmart[{#DISKID},fw]'
+              delay: '3600'
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              applications:
+                -
+                  name: 'Жесткие диски'
+            -
+              name: 'Диск {#DISKID} - Модель'
+              key: 'ZSmart[{#DISKID},model]'
+              delay: '3600'
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              applications:
+                -
+                  name: 'Жесткие диски'
+            -
+              name: 'Диск {#DISKID} - Серийный номер'
+              key: 'ZSmart[{#DISKID},serial]'
+              delay: '3600'
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              applications:
+                -
+                  name: 'Жесткие диски'
+            -
+              name: 'Диск {#DISKID} - Статус SMART'
+              key: 'ZSmart[{#DISKID},status]'
+              delay: '300'
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              applications:
+                -
+                  name: 'Жесткие диски'
+              trigger_prototypes:
+                -
+                  expression: '{regexp(^PASSED$)}=0'
+                  name: 'SMART диска не пройден на {HOST.NAME}'
+                  priority: HIGH
+                -
+                  expression: '{nodata(600)}=1'
+                  name: 'Нет информации о диске на {HOST.NAME}'
+                  priority: HIGH
+                  description: 'Последние 10 минут диск не сообщал статут SMART'
